@@ -2,10 +2,12 @@ package com.bobby.materialdemo;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +15,12 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.bobby.materialdemo.adapter.FeedAdapter;
+import com.bobby.materialdemo.adapter.ShopAdapter;
+import com.bobby.materialdemo.fragment.ShoplistFragment;
 import com.bobby.materialdemo.util.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,15 +29,14 @@ import butterknife.InjectView;
 public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
-    @InjectView(R.id.rvFeed)
-    RecyclerView rvFeed;
+    @InjectView(R.id.pager)
+    ViewPager viewPager;
     @InjectView(R.id.btnCreate)
     ImageButton btnCreate;
     @InjectView(R.id.ivLogo)
     ImageView ivLogo;
 
     private MenuItem inboxMenuItem;
-    private FeedAdapter feedAdapter;
 
     boolean pendingIntroAnimation = false;
 
@@ -44,7 +49,8 @@ public class MainActivity extends ActionBarActivity {
             pendingIntroAnimation = true;
         }
         setupToolbar();
-        setupFeed();
+        setupViewPager();
+//        setupFeed();
     }
 
     private void setupToolbar() {
@@ -52,12 +58,15 @@ public class MainActivity extends ActionBarActivity {
         toolbar.setNavigationIcon(R.drawable.ic_menu_white);
     }
 
-    private void setupFeed() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvFeed.setLayoutManager(linearLayoutManager);
-        feedAdapter = new FeedAdapter(this);
-        rvFeed.setAdapter(feedAdapter);
+    private void setupViewPager() {
+        List<Fragment> fragments = new ArrayList<>(2);
+        fragments.add(new ShoplistFragment());
+        fragments.add(new ShoplistFragment());
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
+        viewPager.setOnPageChangeListener(new ViewPagerListener());
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,6 +119,48 @@ public class MainActivity extends ActionBarActivity {
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        feedAdapter.updateItems();
+//        shopAdapter.updateItems();
+    }
+
+    class FragmentAdapter extends FragmentPagerAdapter {
+        List<Fragment> fragmentList;
+        public FragmentAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+            super(fm);
+            this.fragmentList = fragmentList;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+    }
+
+    class ViewPagerListener implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+        }
+
+        @Override
+        public void onPageSelected(int index) {
+//            if (index == 0) {
+//                firstBtn.setChecked(true);
+//            } else if (index == 1) {
+//                secondBtn.setChecked(true);
+//            } else if (index == 2) {
+//                thirdBtn.setChecked(true);
+//            }
+//            mFragmentTabhost.setCurrentTab(index);
+        }
     }
 }

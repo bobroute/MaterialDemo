@@ -2,6 +2,7 @@ package com.bobby.materialdemo.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 
@@ -9,12 +10,20 @@ import android.view.Display;
  * Created by bobby on 2015/4/23.
  */
 public class Utils {
-    public static float getScreenHeight(Context context) {
+    public static DisplayMetrics getScreenMetrics(Context context) {
         if (context ==null) {
+            return null;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return metrics;
+    }
+
+    public static int getScreenHeight(Context context) {
+        if (context == null) {
             return 0;
         }
-        Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
-        return display.getHeight();
+        return  getScreenMetrics(context).heightPixels;
     }
 
     public static int dip2px(float dipValue, Context context) {
